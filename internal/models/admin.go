@@ -4,7 +4,7 @@ import "gorm.io/gorm"
 
 type Admin struct {
 	gorm.Model
-	ID       uint   `gorm:"primaryKey"`
-	Name     string `gorm:"uniqueIndex;not null"`
+
+	Name     string `gorm:"type:varchar(100);uniqueIndex;not null"`
 	Password string `gorm:"not null"`
 }

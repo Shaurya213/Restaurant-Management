@@ -3,19 +3,27 @@ package main
 import (
 	"log"
 
-	"github.com/Shaurya213/Restaurant-Management/internal/db"
 	"github.com/joho/godotenv"
+
+	"github.com/Shaurya213/Restaurant-Management/internal/db"
+	"github.com/Shaurya213/Restaurant-Management/internal/di"
 )
 
 func main() {
-	// Optional: Load .env if you're using it
-	err := godotenv.Load()
-	if err != nil {
-		log.Println(".env file not found. Using system env variables...")
-	}
+	_ = godotenv.Load()
 
-	// Init DB connection and auto-migrate
+	// 1) DB
 	db.ConnectDB()
 
-	log.Println("Restaurant Management backend started")
+	// 2) DI
+	app, err := di.InitializeApp()
+	if err != nil {
+		log.Fatalf("DI init failed: %v", err)
+	}
+
+	// Smoke log to confirm DI worked
+	log.Printf("DI ready: AdminService=%T, MenuService=%T, OrderService=%T",
+		app.AdminService, app.MenuService, app.OrderService)
+
+	// gRPC server + handlers next...
 }

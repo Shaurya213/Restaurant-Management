@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+package api.v1;
+
+option go_package = "github.com/Shaurya213/Restaurant-Management/gen;gen";
+
+// ---------- AUTH SERVICE ----------
+service AuthService {
+  rpc Register(RegisterRequest) returns (AuthResponse);
+  rpc Login(LoginRequest) returns (AuthResponse);
+}
+
+message RegisterRequest {
+  string name = 1;
+  string password = 2;
+}
+
+message LoginRequest {
+  string name = 1;
+  string password = 2;
+}
+
+message AuthResponse {
+  string token = 1;
+}
+
+// ---------- MENU SERVICE ----------
+service MenuService {
+  rpc AddItem(MenuItem) returns (MenuResponse);
+  rpc GetMenu(Empty) returns (MenuList);
+  rpc UpdateItem(MenuItem) returns (MenuResponse);
+  rpc DeleteItem(DeleteRequest) returns (MenuResponse);
+}
+
+message MenuItem {
+  uint32 id = 1;
+  string name = 2;
+  string description = 3;
+  double price = 4;
+  bool available = 5;
+}
+
+message MenuResponse {
+  string message = 1;
+}
+
+message MenuList {
+  repeated MenuItem items = 1;
+}
+
+// ---------- ORDER SERVICE ----------
+service OrderService {
+  rpc PlaceOrder(PlaceOrderRequest) returns (OrderResponse);
+  rpc MarkPaid(OrderID) returns (OrderResponse);
+  rpc MarkServed(OrderID) returns (OrderResponse);
+  rpc ListOrders(ListOrdersRequest) returns (OrdersList);
+}
+
+message PlaceOrderRequest {
+  string customer = 1;
+  string phone = 2;
+  repeated OrderItem items = 3;
+}
+
+message OrderItem {
+  uint32 menu_item_id = 1;
+  uint32 quantity = 2;
+  double price = 3;
+}
+
+message OrderID {
+  uint32 id = 1;
+}
+
+message ListOrdersRequest {
+  bool only_paid = 1;
+}
+
+message OrderResponse {
+  string message = 1;
+}
+
+message OrdersList {
+  repeated Order orders = 1;
+}
+
+message Order {
+  uint32 id = 1;
+  string customer = 2;
+  string phone = 3;
+  repeated OrderItem items = 4;
+  double total = 5;
+  bool is_paid = 6;
+  bool is_served = 7;
+}
+
+message DeleteRequest {
+  uint32 id = 1;
+}
+
+message Empty {}
